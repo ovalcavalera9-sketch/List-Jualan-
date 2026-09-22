@@ -1,1 +1,1121 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Pembayaran - Vin Store</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+  background:#f5f6f8;
+  color:#202124;
+}
+
+header{
+  background:#111827;
+  color:white;
+  padding:17px 20px;
+  box-shadow:0 2px 10px #0002;
+}
+
+.nav{
+  max-width:900px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.logo{
+  font-size:23px;
+  font-weight:800;
+}
+
+.logo span{
+  color:#22c55e;
+}
+
+.back{
+  color:white;
+  text-decoration:none;
+  font-size:14px;
+}
+
+.container{
+  max-width:900px;
+  margin:30px auto;
+  padding:0 16px;
+}
+
+.title{
+  margin-bottom:20px;
+}
+
+.title h1{
+  font-size:28px;
+  margin-bottom:6px;
+}
+
+.title p{
+  color:#6b7280;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+
+.card{
+  background:white;
+  border-radius:16px;
+  padding:20px;
+  box-shadow:0 5px 20px #0000000d;
+}
+
+.card h2{
+  font-size:19px;
+  margin-bottom:18px;
+}
+
+.info{
+  background:#f9fafb;
+  padding:13px;
+  border-radius:10px;
+  margin-bottom:10px;
+  font-size:14px;
+}
+
+.info b{
+  display:block;
+  margin-bottom:5px;
+}
+
+.orderItem{
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  padding:13px 0;
+  border-bottom:1px solid #eee;
+}
+
+.orderItem small{
+  display:block;
+  color:#777;
+  margin-top:5px;
+}
+
+.total{
+  display:flex;
+  justify-content:space-between;
+  margin-top:18px;
+  padding-top:15px;
+  border-top:2px solid #eee;
+  font-size:20px;
+  font-weight:bold;
+}
+
+.methods{
+  display:grid;
+  gap:10px;
+}
+
+.method{
+  border:2px solid #e5e7eb;
+  border-radius:12px;
+  padding:13px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  transition:.2s;
+}
+
+.method:hover{
+  border-color:#22c55e;
+}
+
+.method.active{
+  border-color:#22c55e;
+  background:#f0fdf4;
+}
+
+.methodIcon{
+  width:42px;
+  height:42px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
+  font-weight:bold;
+  flex-shrink:0;
+}
+
+.qris{
+  background:#111827;
+}
+
+.dana{
+  background:#1688ff;
+}
+
+.gopay{
+  background:#00a86b;
+}
+
+.ovo{
+  background:#4c1d95;
+}
+
+.methodText{
+  flex:1;
+}
+
+.methodText b{
+  display:block;
+  margin-bottom:4px;
+}
+
+.methodText small{
+  color:#777;
+}
+
+.radio{
+  width:19px;
+  height:19px;
+  border:2px solid #bbb;
+  border-radius:50%;
+}
+
+.active .radio{
+  border:6px solid #22c55e;
+}
+
+.paymentBox{
+  display:none;
+  margin-top:18px;
+  text-align:center;
+}
+
+.paymentBox.show{
+  display:block;
+}
+
+.qr{
+  width:210px;
+  height:210px;
+  margin:15px auto;
+  border:10px solid white;
+  box-shadow:0 3px 15px #0002;
+
+  background:
+  repeating-linear-gradient(
+    45deg,
+    #111 0px,
+    #111 4px,
+    white 4px,
+    white 8px
+  );
+}
+
+.danaNumber{
+  margin:15px 0;
+  padding:15px;
+  background:#eff6ff;
+  border:1px solid #bfdbfe;
+  border-radius:10px;
+  color:#1688ff;
+  font-size:21px;
+  font-weight:bold;
+  letter-spacing:1px;
+}
+
+.copyBtn{
+  border:0;
+  background:#1688ff;
+  color:white;
+  padding:11px 18px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.copyBtn:hover{
+  background:#0875e1;
+}
+
+.walletNumber{
+  margin:15px 0;
+  padding:15px;
+  background:#f9fafb;
+  border-radius:10px;
+  font-size:18px;
+  font-weight:bold;
+}
+
+.notice{
+  background:#fff7ed;
+  color:#9a3412;
+  padding:12px;
+  border-radius:10px;
+  font-size:13px;
+  text-align:left;
+  margin-top:12px;
+  line-height:1.5;
+}
+
+.payBtn{
+  width:100%;
+  border:0;
+  padding:15px;
+  margin-top:20px;
+  border-radius:10px;
+  background:#22c55e;
+  color:white;
+  font-weight:bold;
+  font-size:16px;
+  cursor:pointer;
+}
+
+.payBtn:hover{
+  background:#16a34a;
+}
+
+.success{
+  display:none;
+  text-align:center;
+}
+
+.success.show{
+  display:block;
+}
+
+.successIcon{
+  width:75px;
+  height:75px;
+  margin:0 auto 15px;
+  background:#dcfce7;
+  color:#16a34a;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:40px;
+}
+
+.success h2{
+  margin-bottom:8px;
+}
+
+.success p{
+  color:#666;
+  line-height:1.6;
+}
+
+.waBtn{
+  display:block;
+  margin-top:20px;
+  padding:14px;
+  background:#25d366;
+  color:white;
+  text-decoration:none;
+  border-radius:10px;
+  font-weight:bold;
+}
+
+.homeBtn{
+  display:block;
+  margin-top:10px;
+  padding:13px;
+  background:#111827;
+  color:white;
+  text-decoration:none;
+  border-radius:10px;
+}
+
+@media(max-width:700px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .container{
+    margin-top:20px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="nav">
+
+    <div class="logo">
+      TopUp<span>Ku</span>
+    </div>
+
+    <a href="index.html" class="back">
+      ← Kembali
+    </a>
+
+  </div>
+</header>
+
+
+<div class="container">
+
+  <div class="title">
+
+    <h1>💳 Pembayaran</h1>
+
+    <p>
+      Periksa pesanan dan pilih metode pembayaran.
+    </p>
+
+  </div>
+
+
+  <!-- =========================
+       HALAMAN PEMBAYARAN
+  ========================== -->
+
+  <div id="paymentPage">
+
+    <div class="grid">
+
+
+      <!-- DETAIL PESANAN -->
+
+      <div class="card">
+
+        <h2>📦 Detail Pesanan</h2>
+
+        <div class="info">
+          <b>Nama</b>
+          <span id="buyerName">-</span>
+        </div>
+
+        <div class="info">
+          <b>WhatsApp</b>
+          <span id="buyerPhone">-</span>
+        </div>
+
+        <div class="info">
+          <b>Catatan</b>
+          <span id="buyerAddress">-</span>
+        </div>
+
+        <div id="items"></div>
+
+        <div class="total">
+
+          <span>Total</span>
+
+          <span id="total">
+            Rp0
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- PEMBAYARAN -->
+
+      <div class="card">
+
+        <h2>💰 Pilih Pembayaran</h2>
+
+
+        <div class="methods">
+
+
+          <!-- QRIS -->
+
+          <div
+            class="method active"
+            onclick="selectMethod('QRIS',this)"
+          >
+
+            <div class="methodIcon qris">
+              QR
+            </div>
+
+            <div class="methodText">
+
+              <b>QRIS</b>
+
+              <small>
+                Scan menggunakan aplikasi pembayaran
+              </small>
+
+            </div>
+
+            <div class="radio"></div>
+
+          </div>
+
+
+          <!-- DANA -->
+
+          <div
+            class="method"
+            onclick="selectMethod('DANA',this)"
+          >
+
+            <div class="methodIcon dana">
+              D
+            </div>
+
+            <div class="methodText">
+
+              <b>DANA</b>
+
+              <small>
+                Transfer ke nomor DANA
+              </small>
+
+            </div>
+
+            <div class="radio"></div>
+
+          </div>
+
+
+          <!-- GOPAY -->
+
+          <div
+            class="method"
+            onclick="selectMethod('GoPay',this)"
+          >
+
+            <div class="methodIcon gopay">
+              G
+            </div>
+
+            <div class="methodText">
+
+              <b>GoPay</b>
+
+              <small>
+                Transfer melalui GoPay
+              </small>
+
+            </div>
+
+            <div class="radio"></div>
+
+          </div>
+
+
+          <!-- OVO -->
+
+          <div
+            class="method"
+            onclick="selectMethod('OVO',this)"
+          >
+
+            <div class="methodIcon ovo">
+              O
+            </div>
+
+            <div class="methodText">
+
+              <b>OVO</b>
+
+              <small>
+                Transfer melalui OVO
+              </small>
+
+            </div>
+
+            <div class="radio"></div>
+
+          </div>
+
+        </div>
+
+
+        <!-- =========================
+             QRIS
+        ========================== -->
+
+        <div
+          id="qrisBox"
+          class="paymentBox show"
+        >
+
+          <h3>Scan QRIS</h3>
+
+          <div class="qr"></div>
+
+          <p style="font-size:13px;color:#777;">
+            Scan QRIS untuk membayar sesuai total pesanan.
+          </p>
+
+          <div class="notice">
+
+            ⚠️ QRIS ini masih <b>demo</b>.
+            Untuk menerima pembayaran sungguhan,
+            QRIS harus diganti dengan QRIS merchant kamu.
+
+          </div>
+
+        </div>
+
+
+        <!-- =========================
+             DANA
+        ========================== -->
+
+        <div
+          id="danaBox"
+          class="paymentBox"
+        >
+
+          <h3>Bayar via DANA</h3>
+
+          <p
+            style="
+            margin-top:10px;
+            color:#777;
+            font-size:14px;
+            "
+          >
+            Transfer sesuai total pembayaran ke:
+          </p>
+
+
+          <div class="danaNumber">
+            08xxxxxxxxxx
+          </div>
+
+
+          <button
+            class="copyBtn"
+            onclick="copyDana()"
+          >
+            📋 Salin Nomor DANA
+          </button>
+
+
+          <div class="notice">
+
+            Pastikan nomor tujuan sudah benar
+            sebelum melakukan transfer.
+
+            Setelah transfer, klik
+            <b>"Saya Sudah Bayar"</b>
+            lalu kirim bukti transfer.
+
+          </div>
+
+        </div>
+
+
+        <!-- =========================
+             GOPAY
+        ========================== -->
+
+        <div
+          id="gopayBox"
+          class="paymentBox"
+        >
+
+          <h3>Bayar via GoPay</h3>
+
+          <p
+            style="
+            margin-top:10px;
+            color:#777;
+            font-size:14px;
+            "
+          >
+            Transfer sesuai total pembayaran ke:
+          </p>
+
+
+          <div class="walletNumber">
+            08xxxxxxxxxx
+          </div>
+
+
+          <div class="notice">
+
+            ⚠️ Ganti nomor di atas dengan
+            nomor GoPay kamu.
+
+          </div>
+
+        </div>
+
+
+        <!-- =========================
+             OVO
+        ========================== -->
+
+        <div
+          id="ovoBox"
+          class="paymentBox"
+        >
+
+          <h3>Bayar via OVO</h3>
+
+          <p
+            style="
+            margin-top:10px;
+            color:#777;
+            font-size:14px;
+            "
+          >
+            Transfer sesuai total pembayaran ke:
+          </p>
+
+
+          <div class="walletNumber">
+            08xxxxxxxxxx
+          </div>
+
+
+          <div class="notice">
+
+            ⚠️ Ganti nomor di atas dengan
+            nomor OVO kamu.
+
+          </div>
+
+        </div>
+
+
+        <button
+          class="payBtn"
+          onclick="paymentSuccess()"
+        >
+
+          ✓ Saya Sudah Bayar
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       BERHASIL
+  ========================== -->
+
+  <div
+    id="successPage"
+    class="card success"
+  >
+
+    <div class="successIcon">
+      ✓
+    </div>
+
+    <h2>
+      Pembayaran Berhasil!
+    </h2>
+
+    <p>
+
+      Pesanan kamu sudah dicatat.<br>
+
+      Klik tombol di bawah untuk
+      mengirim detail pesanan dan
+      bukti pembayaran.
+
+    </p>
+
+
+    <a
+      id="whatsappButton"
+      class="waBtn"
+      href="#"
+      target="_blank"
+    >
+
+      📲 Kirim Bukti Pembayaran
+
+    </a>
+
+
+    <a
+      href="index.html"
+      class="homeBtn"
+    >
+
+      ← Kembali ke Toko
+
+    </a>
+
+  </div>
+
+</div>
+
+
+<script>
+
+/* =================================
+   KONFIGURASI TOKO
+================================= */
+
+
+/*
+   NOMOR DANA TOKO
+
+   GANTI:
+   08xxxxxxxxxx
+
+   Contoh:
+   081234567890
+*/
+
+const nomorDana =
+  "0895396001313";
+
+
+/*
+   NOMOR GOPAY TOKO
+
+   GANTI DENGAN NOMOR GOPAY
+*/
+
+const nomorGoPay =
+  "085718504288";
+
+
+/*
+   NOMOR OVO TOKO
+
+   GANTI DENGAN NOMOR OVO
+*/
+
+const nomorOVO =
+  "08xxxxxxxxxx";
+
+
+/*
+   NOMOR WHATSAPP TOKO
+
+   HARUS FORMAT 62
+
+   Contoh:
+   628123456789
+*/
+
+const nomorWhatsApp =
+  "6285718504288";
+
+
+/* =================================
+   ORDER
+================================= */
+
+let order = null;
+
+let selectedMethod = "QRIS";
+
+
+const savedOrder =
+  localStorage.getItem("vinStoreOrder");
+
+
+if(!savedOrder){
+
+  alert(
+    "Data pesanan tidak ditemukan."
+  );
+
+  window.location.href =
+    "index.html";
+
+}else{
+
+  order =
+    JSON.parse(savedOrder);
+
+  loadOrder();
+
+}
+
+
+/* =================================
+   LOAD ORDER
+================================= */
+
+function loadOrder(){
+
+  document.getElementById("buyerName")
+    .innerText =
+      order.name || "-";
+
+
+  document.getElementById("buyerPhone")
+    .innerText =
+      order.phone || "-";
+
+
+  document.getElementById("buyerAddress")
+    .innerText =
+      order.address || "-";
+
+
+  const items =
+    document.getElementById("items");
+
+
+  items.innerHTML = "";
+
+
+  order.items.forEach(item => {
+
+    const subtotal =
+      item.price * item.qty;
+
+
+    items.innerHTML += `
+
+      <div class="orderItem">
+
+        <div>
+
+          <b>
+            ${item.name}
+          </b>
+
+          <small>
+            ${item.qty} ×
+            Rp${item.price.toLocaleString("id-ID")}
+          </small>
+
+        </div>
+
+        <b>
+          Rp${subtotal.toLocaleString("id-ID")}
+        </b>
+
+      </div>
+
+    `;
+
+  });
+
+
+  document.getElementById("total")
+    .innerText =
+      "Rp" +
+      order.total.toLocaleString("id-ID");
+
+}
+
+
+/* =================================
+   PILIH METODE
+================================= */
+
+function selectMethod(method,element){
+
+  selectedMethod =
+    method;
+
+
+  document
+    .querySelectorAll(".method")
+    .forEach(el => {
+
+      el.classList.remove("active");
+
+    });
+
+
+  element.classList.add("active");
+
+
+  document
+    .querySelectorAll(".paymentBox")
+    .forEach(box => {
+
+      box.classList.remove("show");
+
+    });
+
+
+  if(method === "QRIS"){
+
+    document
+      .getElementById("qrisBox")
+      .classList.add("show");
+
+  }
+
+
+  if(method === "DANA"){
+
+    document
+      .getElementById("danaBox")
+      .classList.add("show");
+
+  }
+
+
+  if(method === "GoPay"){
+
+    document
+      .getElementById("gopayBox")
+      .classList.add("show");
+
+  }
+
+
+  if(method === "OVO"){
+
+    document
+      .getElementById("ovoBox")
+      .classList.add("show");
+
+  }
+
+}
+
+
+/* =================================
+   SALIN NOMOR DANA
+================================= */
+
+function copyDana(){
+
+  navigator.clipboard
+    .writeText(nomorDana)
+    .then(() => {
+
+      alert(
+        "Nomor DANA berhasil disalin!"
+      );
+
+    })
+    .catch(() => {
+
+      alert(
+        "Nomor DANA: " +
+        nomorDana
+      );
+
+    });
+
+}
+
+
+/* =================================
+   PEMBAYARAN BERHASIL
+================================= */
+
+function paymentSuccess(){
+
+  const yakin =
+    confirm(
+      "Apakah kamu sudah melakukan transfer?"
+    );
+
+
+  if(!yakin){
+
+    return;
+
+  }
+
+
+  document.getElementById("paymentPage")
+    .style.display =
+      "none";
+
+
+  document.getElementById("successPage")
+    .classList.add("show");
+
+
+  createWhatsAppMessage();
+
+}
+
+
+/* =================================
+   BUAT PESAN WHATSAPP
+================================= */
+
+function createWhatsAppMessage(){
+
+  let message =
+    "HALO VIN STORE 👋\n\n" +
+
+    "Saya sudah melakukan pembayaran.\n\n" +
+
+    "📦 DETAIL PESANAN\n";
+
+
+  order.items.forEach(item => {
+
+    const subtotal =
+      item.price * item.qty;
+
+
+    message +=
+      "• " +
+      item.name +
+      " × " +
+      item.qty +
+      " = Rp" +
+      subtotal.toLocaleString("id-ID") +
+      "\n";
+
+  });
+
+
+  message +=
+    "\n💰 TOTAL: Rp" +
+    order.total.toLocaleString("id-ID") +
+
+    "\n💳 METODE: " +
+    selectedMethod +
+
+    "\n👤 NAMA: " +
+    order.name +
+
+    "\n📱 NO. WA: " +
+    order.phone +
+
+    "\n📝 CATATAN: " +
+    (order.address || "-") +
+
+    "\n\n📸 `wajib kirim bukti tf!`";
+
+
+  const waURL =
+    "https://wa.me/" +
+    nomorWhatsApp +
+    "?text=" +
+    encodeURIComponent(message);
+
+
+  document.getElementById("whatsappButton")
+    .href =
+      waURL;
+
+}
+
+</script>
+
+</body>
+          </html>
