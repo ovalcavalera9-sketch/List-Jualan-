@@ -1,713 +1,666 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Pembayaran - Vin Store</title>
 
-  <title>Pembayaran - Vin Store</title>
+<style>
+*{box-sizing:border-box;font-family:Arial,sans-serif}
+body{margin:0;background:#f3f4f6;color:#111827}
+header{background:#111827;color:white;padding:18px;text-align:center;font-size:22px;font-weight:bold}
+.container{max-width:650px;margin:20px auto;padding:15px}
+.card{background:white;border-radius:14px;padding:20px;margin-bottom:18px;box-shadow:0 4px 15px #ddd}
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-    }
+.status{
+  text-align:center;
+  padding:16px;
+  border-radius:10px;
+  margin-bottom:18px;
+  background:#fff7ed;
+  border:1px solid #fed7aa;
+}
 
-    body {
-      background: #f3f4f6;
-      color: #111827;
-    }
+.status .icon{font-size:30px}
+.status h3{margin:5px 0}
+.status p{margin:5px 0;color:#666}
 
-    header {
-      background: #111827;
-      color: white;
-      padding: 18px;
-      text-align: center;
-      font-size: 22px;
-      font-weight: bold;
-    }
+.order-item{
+  padding:10px 0;
+  border-bottom:1px solid #eee;
+}
 
-    .container {
-      max-width: 650px;
-      margin: 25px auto;
-      padding: 15px;
-    }
+.total{
+  font-size:22px;
+  font-weight:bold;
+  margin-top:15px;
+}
 
-    .card {
-      background: white;
-      border-radius: 14px;
-      padding: 20px;
-      margin-bottom: 18px;
-      box-shadow: 0 4px 15px rgba(0,0,0,.08);
-    }
+.method{
+  display:block;
+  border:2px solid #ddd;
+  border-radius:10px;
+  padding:15px;
+  margin-top:10px;
+  cursor:pointer;
+}
 
-    h2 {
-      margin-bottom: 15px;
-    }
+.method.active{
+  border-color:#2563eb;
+  background:#eff6ff;
+}
 
-    .order-item {
-      padding: 10px 0;
-      border-bottom: 1px solid #eee;
-    }
+.detail{
+  display:none;
+  background:#f9fafb;
+  padding:15px;
+  border-radius:10px;
+  margin-top:8px;
+}
 
-    .total {
-      font-size: 22px;
-      font-weight: bold;
-      margin-top: 15px;
-    }
+.detail.show{display:block}
 
-    .payment-list {
-      display: grid;
-      gap: 10px;
-    }
+.number{
+  font-size:20px;
+  font-weight:bold;
+  margin:10px 0;
+}
 
-    .payment-method {
-      border: 2px solid #ddd;
-      border-radius: 12px;
-      padding: 15px;
-      cursor: pointer;
-    }
+button{
+  cursor:pointer;
+}
 
-    .payment-method.active {
-      border-color: #2563eb;
-      background: #eff6ff;
-    }
+.copy{
+  width:100%;
+  padding:12px;
+  border:0;
+  border-radius:8px;
+  background:#2563eb;
+  color:white;
+  font-weight:bold;
+}
 
-    .payment-method input {
-      margin-right: 8px;
-    }
+.qris{
+  width:100%;
+  padding:13px;
+  border:0;
+  border-radius:8px;
+  background:#7c3aed;
+  color:white;
+  font-weight:bold;
+}
 
-    .payment-detail {
-      display: none;
-      margin-top: 15px;
-      padding: 15px;
-      background: #f9fafb;
-      border-radius: 10px;
-    }
+#qrisImage{
+  display:none;
+  width:100%;
+  max-width:350px;
+  margin:15px auto;
+  border-radius:10px;
+}
 
-    .payment-detail.show {
-      display: block;
-    }
+.paid{
+  width:100%;
+  padding:18px;
+  margin-top:18px;
+  border:0;
+  border-radius:10px;
+  background:#16a34a;
+  color:white;
+  font-size:19px;
+  font-weight:bold;
+}
 
-    .number {
-      font-size: 20px;
-      font-weight: bold;
-      margin: 10px 0;
-      word-break: break-all;
-    }
+.success{
+  display:none;
+  text-align:center;
+}
 
-    .copy-btn {
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
-      background: #2563eb;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
+.success h2{
+  color:#16a34a;
+}
 
-    .qris-btn {
-      width: 100%;
-      padding: 13px;
-      border: none;
-      border-radius: 8px;
-      background: #7c3aed;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
+.wa{
+  display:block;
+  background:#25d366;
+  color:white;
+  text-decoration:none;
+  padding:16px;
+  border-radius:10px;
+  font-size:18px;
+  font-weight:bold;
+  margin-top:15px;
+}
 
-    #qrisImage {
-      width: 100%;
-      max-width: 350px;
-      display: none;
-      margin: 15px auto 0;
-      border-radius: 10px;
-    }
-
-    .paid-btn {
-      width: 100%;
-      padding: 18px;
-      border: none;
-      border-radius: 10px;
-      background: #16a34a;
-      color: white;
-      font-size: 19px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-
-    .success {
-      display: none;
-      text-align: center;
-    }
-
-    .success h2 {
-      color: #16a34a;
-    }
-
-    .wa-btn {
-      display: block;
-      text-decoration: none;
-      text-align: center;
-      width: 100%;
-      padding: 16px;
-      border-radius: 10px;
-      background: #25d366;
-      color: white;
-      font-size: 18px;
-      font-weight: bold;
-      margin-top: 15px;
-    }
-
-    .back-btn {
-      display: block;
-      text-align: center;
-      text-decoration: none;
-      margin-top: 15px;
-      color: #2563eb;
-    }
-
-    .warning {
-      background: #fff7ed;
-      border: 1px solid #fed7aa;
-      padding: 12px;
-      border-radius: 8px;
-      font-size: 13px;
-      margin-top: 12px;
-    }
-  </style>
+.back{
+  display:block;
+  text-align:center;
+  margin-top:15px;
+  text-decoration:none;
+  color:#2563eb;
+}
+</style>
 </head>
 
 <body>
 
 <header>
-  💳 Pembayaran Vin Store
+💳 Pembayaran Vin Store
 </header>
 
 <div class="container">
 
-  <div class="card" id="orderCard">
-    <h2>📦 Detail Pesanan</h2>
+<div class="card" id="orderCard">
 
-    <div id="orderItems"></div>
+  <div class="status">
+    <div class="icon">⏳</div>
 
-    <div class="total">
-      Total: <span id="totalPrice">Rp0</span>
-    </div>
-
-    <div class="warning">
-      Pastikan nominal pembayaran sesuai dengan total pesanan.
-    </div>
-  </div>
-
-
-  <div class="card" id="paymentCard">
-
-    <h2>💳 Pilih Pembayaran</h2>
-
-    <div class="payment-list">
-
-      <!-- DANA -->
-      <label class="payment-method" id="methodDana">
-        <input
-          type="radio"
-          name="payment"
-          value="DANA"
-          onchange="selectPayment('DANA')"
-        >
-        <strong>💙 DANA</strong>
-      </label>
-
-      <div class="payment-detail" id="detailDana">
-        <p>Nomor DANA:</p>
-
-        <!-- GANTI NOMOR INI -->
-        <div class="number" id="danaNumber">
-          08XXXXXXXXXX
-        </div>
-
-        <button class="copy-btn"
-          onclick="copyNumber('danaNumber')">
-          📋 SALIN NOMOR DANA
-        </button>
-      </div>
-
-
-      <!-- GOPAY -->
-      <label class="payment-method" id="methodGoPay">
-        <input
-          type="radio"
-          name="payment"
-          value="GoPay"
-          onchange="selectPayment('GoPay')"
-        >
-        <strong>💚 GoPay</strong>
-      </label>
-
-      <div class="payment-detail" id="detailGoPay">
-        <p>Nomor GoPay:</p>
-
-        <!-- GANTI NOMOR INI -->
-        <div class="number" id="gopayNumber">
-          08XXXXXXXXXX
-        </div>
-
-        <button class="copy-btn"
-          onclick="copyNumber('gopayNumber')">
-          📋 SALIN NOMOR GOPAY
-        </button>
-      </div>
-
-
-      <!-- OVO -->
-      <label class="payment-method" id="methodOVO">
-        <input
-          type="radio"
-          name="payment"
-          value="OVO"
-          onchange="selectPayment('OVO')"
-        >
-        <strong>💜 OVO</strong>
-      </label>
-
-      <div class="payment-detail" id="detailOVO">
-        <p>Nomor OVO:</p>
-
-        <!-- GANTI NOMOR INI -->
-        <div class="number" id="ovoNumber">
-          08XXXXXXXXXX
-        </div>
-
-        <button class="copy-btn"
-          onclick="copyNumber('ovoNumber')">
-          📋 SALIN NOMOR OVO
-        </button>
-      </div>
-
-
-      <!-- QRIS -->
-      <label class="payment-method" id="methodQRIS">
-        <input
-          type="radio"
-          name="payment"
-          value="QRIS"
-          onchange="selectPayment('QRIS')"
-        >
-        <strong>🟪 QRIS</strong>
-      </label>
-
-      <div class="payment-detail" id="detailQRIS">
-
-        <button class="qris-btn"
-          onclick="showQRIS()">
-          🖼️ TAMPILKAN QRIS
-        </button>
-
-        <img
-          id="qrisImage"
-          src="qris.png"
-          alt="QRIS"
-          onerror="this.style.display='none'; alert('File qris.png belum ada di folder website!')"
-        >
-
-        <p style="text-align:center;margin-top:10px;">
-          Scan QRIS menggunakan aplikasi pembayaran kamu.
-        </p>
-
-      </div>
-
-    </div>
-
-
-    <button class="paid-btn" onclick="alreadyPaid()">
-      ✅ SAYA SUDAH BAYAR
-    </button>
-
-  </div>
-
-
-  <!-- SUCCESS -->
-  <div class="card success" id="successCard">
-
-    <h2>✅ Pembayaran Berhasil!</h2>
+    <h3>Menunggu Pembayaran</h3>
 
     <p>
-      Pesanan kamu sudah ditandai sebagai pembayaran berhasil.
+      Silakan transfer sesuai metode pembayaran.
     </p>
-
-    <p style="margin-top:10px;">
-      Silakan kirim bukti pembayaran kepada admin.
-    </p>
-
-    <a
-      id="whatsappButton"
-      class="wa-btn"
-      href="#"
-      target="_blank"
-    >
-      📲 KIRIM BUKTI PEMBAYARAN
-    </a>
-
-    <a href="index.html" class="back-btn">
-      ← Kembali ke toko
-    </a>
-
   </div>
+
+  <h2>📦 Detail Pesanan</h2>
+
+  <div id="orderItems"></div>
+
+  <div class="total">
+    Total:
+    <span id="totalPrice">Rp0</span>
+  </div>
+
+</div>
+
+
+<div class="card" id="paymentCard">
+
+<h2>💳 Pembayaran</h2>
+
+<!-- DANA -->
+
+<label class="method" id="methodDana">
+
+<input type="radio"
+name="payment"
+value="DANA"
+onchange="selectPayment('DANA')">
+
+<b>💙 DANA</b>
+
+</label>
+
+<div class="detail" id="detailDana">
+
+<p>Nomor DANA:</p>
+
+<div class="number" id="danaNumber">
+08XXXXXXXXXX
+</div>
+
+<button class="copy"
+onclick="copyNumber('danaNumber')">
+📋 SALIN NOMOR DANA
+</button>
+
+</div>
+
+
+<!-- GOPAY -->
+
+<label class="method" id="methodGoPay">
+
+<input type="radio"
+name="payment"
+value="GoPay"
+onchange="selectPayment('GoPay')">
+
+<b>💚 GoPay</b>
+
+</label>
+
+<div class="detail" id="detailGoPay">
+
+<p>Nomor GoPay:</p>
+
+<div class="number" id="gopayNumber">
+08XXXXXXXXXX
+</div>
+
+<button class="copy"
+onclick="copyNumber('gopayNumber')">
+📋 SALIN NOMOR GOPAY
+</button>
+
+</div>
+
+
+<!-- OVO -->
+
+<label class="method" id="methodOVO">
+
+<input type="radio"
+name="payment"
+value="OVO"
+onchange="selectPayment('OVO')">
+
+<b>💜 OVO</b>
+
+</label>
+
+<div class="detail" id="detailOVO">
+
+<p>Nomor OVO:</p>
+
+<div class="number" id="ovoNumber">
+08XXXXXXXXXX
+</div>
+
+<button class="copy"
+onclick="copyNumber('ovoNumber')">
+📋 SALIN NOMOR OVO
+</button>
+
+</div>
+
+
+<!-- QRIS -->
+
+<label class="method" id="methodQRIS">
+
+<input type="radio"
+name="payment"
+value="QRIS"
+onchange="selectPayment('QRIS')">
+
+<b>🟪 QRIS</b>
+
+</label>
+
+<div class="detail" id="detailQRIS">
+
+<button class="qris"
+onclick="showQRIS()">
+🖼️ TAMPILKAN QRIS
+</button>
+
+<img
+id="qrisImage"
+src="qris.png"
+alt="QRIS">
+
+</div>
+
+
+<button class="paid"
+onclick="alreadyPaid()">
+✅ SAYA SUDAH BAYAR
+</button>
+
+</div>
+
+
+<!-- BERHASIL -->
+
+<div class="card success" id="successCard">
+
+<h2>✅ Pembayaran Berhasil!</h2>
+
+<p style="margin-top:10px">
+Pesanan kamu sudah ditandai sebagai pembayaran berhasil.
+</p>
+
+<p style="margin-top:10px">
+Silakan kirim bukti pembayaran ke admin.
+</p>
+
+<a
+id="whatsappButton"
+class="wa"
+href="#"
+target="_blank">
+
+📲 KIRIM BUKTI PEMBAYARAN
+
+</a>
+
+<a href="index.html" class="back">
+← Kembali ke toko
+</a>
+
+</div>
 
 </div>
 
 
 <script>
 
-  /*
-    ===============================
-    NOMOR PEMBAYARAN
-    ===============================
+/* =================================
+   GANTI NOMOR PEMBAYARAN DI SINI
+   ================================= */
 
-    GANTI NOMOR DI BAWAH DENGAN
-    NOMOR DANA / GOPAY / OVO KAMU.
-  */
+const NOMOR_DANA="08XXXXXXXXXX";
+const NOMOR_GOPAY="08XXXXXXXXXX";
+const NOMOR_OVO="08XXXXXXXXXX";
 
-  const NOMOR_DANA = "0895396001313";
-  const NOMOR_GOPAY = "085718504288";
-  const NOMOR_OVO = "belum ada guys";
+/* WhatsApp admin */
 
+const NOMOR_ADMIN="6285718504288";
 
-  /*
-    NOMOR WHATSAPP ADMIN
 
-    Format:
-    628xxxxxxxxxx
+let order=null;
+let selectedPayment=null;
 
-    Contoh:
-    6285718504288
-  */
 
-  const NOMOR_WHATSAPP_ADMIN = "6285718504288";
+/* Ambil pesanan */
 
+const saved=
+localStorage.getItem("vinStoreOrder");
 
-  let order = null;
-  let selectedPayment = null;
 
+if(!saved){
 
-  function formatRupiah(number) {
-    return "Rp" + Number(number).toLocaleString("id-ID");
-  }
+  document.getElementById("orderCard").innerHTML=`
+    <h2>❌ Pesanan tidak ditemukan</h2>
 
+    <p>Silakan kembali ke toko.</p>
 
-  /*
-    AMBIL PESANAN DARI INDEX.HTML
-  */
+    <a href="index.html" class="back">
+      ← Kembali ke toko
+    </a>
+  `;
 
-  const savedOrder =
-    localStorage.getItem("vinStoreOrder");
+  document.getElementById("paymentCard")
+    .style.display="none";
 
+}else{
 
-  if (!savedOrder) {
+  order=JSON.parse(saved);
 
-    document.getElementById("orderCard").innerHTML = `
-      <h2>❌ Pesanan tidak ditemukan</h2>
+  showOrder();
 
-      <p>
-        Silakan kembali ke toko dan lakukan checkout lagi.
-      </p>
+  /* otomatis pilih pembayaran dari checkout */
 
-      <a href="index.html" class="back-btn">
-        ← Kembali ke toko
-      </a>
-    `;
+  if(order.payment){
 
-    document.getElementById("paymentCard").style.display = "none";
-
-  } else {
-
-    order = JSON.parse(savedOrder);
-
-    showOrder();
-
-    /*
-      Otomatis pilih metode pembayaran
-      yang dipilih dari halaman checkout.
-    */
-
-    if (order.payment) {
-      const radio = document.querySelector(
-        `input[name="payment"][value="${order.payment}"]`
-      );
-
-      if (radio) {
-        radio.checked = true;
-        selectPayment(order.payment);
-      }
-    }
-  }
-
-
-  function showOrder() {
-
-    const container =
-      document.getElementById("orderItems");
-
-    container.innerHTML = "";
-
-    order.items.forEach(item => {
-
-      const div = document.createElement("div");
-
-      div.className = "order-item";
-
-      div.innerHTML = `
-        <strong>${item.name}</strong><br>
-        ${item.qty} × ${formatRupiah(item.price)}
-        =
-        <strong>${formatRupiah(item.subtotal)}</strong>
-      `;
-
-      container.appendChild(div);
-
-    });
-
-
-    document.getElementById("totalPrice")
-      .textContent = formatRupiah(order.total);
-  }
-
-
-  function selectPayment(payment) {
-
-    selectedPayment = payment;
-
-
-    document.querySelectorAll(".payment-method")
-      .forEach(element => {
-        element.classList.remove("active");
-      });
-
-
-    document.querySelectorAll(".payment-detail")
-      .forEach(element => {
-        element.classList.remove("show");
-      });
-
-
-    if (payment === "DANA") {
-
-      document.getElementById("methodDana")
-        .classList.add("active");
-
-      document.getElementById("detailDana")
-        .classList.add("show");
-
-      document.getElementById("danaNumber")
-        .textContent = NOMOR_DANA;
-
-    }
-
-
-    if (payment === "GoPay") {
-
-      document.getElementById("methodGoPay")
-        .classList.add("active");
-
-      document.getElementById("detailGoPay")
-        .classList.add("show");
-
-      document.getElementById("gopayNumber")
-        .textContent = NOMOR_GOPAY;
-
-    }
-
-
-    if (payment === "OVO") {
-
-      document.getElementById("methodOVO")
-        .classList.add("active");
-
-      document.getElementById("detailOVO")
-        .classList.add("show");
-
-      document.getElementById("ovoNumber")
-        .textContent = NOMOR_OVO;
-
-    }
-
-
-    if (payment === "QRIS") {
-
-      document.getElementById("methodQRIS")
-        .classList.add("active");
-
-      document.getElementById("detailQRIS")
-        .classList.add("show");
-
-    }
-
-  }
-
-
-  async function copyNumber(elementId) {
-
-    const number =
-      document.getElementById(elementId).textContent.trim();
-
-    try {
-
-      await navigator.clipboard.writeText(number);
-
-      alert("Nomor berhasil disalin!");
-
-    } catch (error) {
-
-      alert("Nomor: " + number);
-
-    }
-
-  }
-
-
-  function showQRIS() {
-
-    const image =
-      document.getElementById("qrisImage");
-
-    image.style.display = "block";
-
-  }
-
-
-  function alreadyPaid() {
-
-    if (!selectedPayment) {
-
-      alert("Pilih metode pembayaran terlebih dahulu!");
-
-      return;
-    }
-
-
-    const confirmPayment =
-      confirm(
-        "Apakah kamu sudah melakukan pembayaran sebesar " +
-        formatRupiah(order.total) +
-        " melalui " +
-        selectedPayment +
-        "?"
-      );
-
-
-    if (!confirmPayment) {
-      return;
-    }
-
-
-    /*
-      Simpan status pesanan
-    */
-
-    order.status = "Pembayaran Berhasil";
-
-    order.payment = selectedPayment;
-
-    order.paidAt =
-      new Date().toLocaleString("id-ID");
-
-
-    localStorage.setItem(
-      "vinStoreOrder",
-      JSON.stringify(order)
+    const radio=document.querySelector(
+      'input[name="payment"][value="'+order.payment+'"]'
     );
 
+    if(radio){
 
-    /*
-      BUAT PESAN WHATSAPP
-    */
+      radio.checked=true;
 
-    let message =
-      "HALO VIN STORE 👋\n\n";
+      selectPayment(order.payment);
 
-    message +=
-      "Saya sudah melakukan pembayaran.\n\n";
-
-    message +=
-      "📦 DETAIL PESANAN\n";
-
-    order.items.forEach(item => {
-
-      message +=
-        "• " +
-        item.name +
-        " × " +
-        item.qty +
-        " = " +
-        formatRupiah(item.subtotal) +
-        "\n";
-
-    });
-
-
-    message +=
-      "\n💰 TOTAL: " +
-      formatRupiah(order.total) +
-      "\n";
-
-    message +=
-      "💳 METODE: " +
-      selectedPayment +
-      "\n";
-
-    message +=
-      "👤 NAMA: " +
-      order.name +
-      "\n";
-
-    message +=
-      "📱 NO. WA: " +
-      order.phone +
-      "\n";
-
-    message +=
-      "📝 CATATAN: " +
-      (order.address || "-") +
-      "\n";
-
-    message +=
-      "✅ STATUS: Pembayaran Berhasil\n\n";
-
-    message +=
-      "📸 Saya akan mengirim bukti pembayaran di chat ini.";
-
-
-    const whatsappURL =
-      "https://wa.me/" +
-      NOMOR_WHATSAPP_ADMIN +
-      "?text=" +
-      encodeURIComponent(message);
-
-
-    document.getElementById("whatsappButton")
-      .href = whatsappURL;
-
-
-    /*
-      TAMPILKAN HALAMAN BERHASIL
-    */
-
-    document.getElementById("orderCard")
-      .style.display = "none";
-
-    document.getElementById("paymentCard")
-      .style.display = "none";
-
-    document.getElementById("successCard")
-      .style.display = "block";
+    }
 
   }
+
+}
+
+
+function rupiah(n){
+
+  return "Rp"+Number(n)
+    .toLocaleString("id-ID");
+
+}
+
+
+function showOrder(){
+
+  const box=
+    document.getElementById("orderItems");
+
+  box.innerHTML="";
+
+  order.items.forEach(item=>{
+
+    box.innerHTML+=`
+      <div class="order-item">
+
+        <b>${item.name}</b><br>
+
+        ${item.qty} × ${rupiah(item.price)}
+
+        =
+
+        <b>${rupiah(item.subtotal)}</b>
+
+      </div>
+    `;
+
+  });
+
+  document.getElementById("totalPrice")
+    .textContent=rupiah(order.total);
+
+}
+
+
+function selectPayment(payment){
+
+  selectedPayment=payment;
+
+  document.querySelectorAll(".method")
+    .forEach(x=>x.classList.remove("active"));
+
+  document.querySelectorAll(".detail")
+    .forEach(x=>x.classList.remove("show"));
+
+
+  if(payment==="DANA"){
+
+    document.getElementById("methodDana")
+      .classList.add("active");
+
+    document.getElementById("detailDana")
+      .classList.add("show");
+
+    document.getElementById("danaNumber")
+      .textContent=NOMOR_DANA;
+
+  }
+
+
+  if(payment==="GoPay"){
+
+    document.getElementById("methodGoPay")
+      .classList.add("active");
+
+    document.getElementById("detailGoPay")
+      .classList.add("show");
+
+    document.getElementById("gopayNumber")
+      .textContent=NOMOR_GOPAY;
+
+  }
+
+
+  if(payment==="OVO"){
+
+    document.getElementById("methodOVO")
+      .classList.add("active");
+
+    document.getElementById("detailOVO")
+      .classList.add("show");
+
+    document.getElementById("ovoNumber")
+      .textContent=NOMOR_OVO;
+
+  }
+
+
+  if(payment==="QRIS"){
+
+    document.getElementById("methodQRIS")
+      .classList.add("active");
+
+    document.getElementById("detailQRIS")
+      .classList.add("show");
+
+  }
+
+}
+
+
+async function copyNumber(id){
+
+  const number=
+    document.getElementById(id)
+    .textContent.trim();
+
+  try{
+
+    await navigator.clipboard.writeText(number);
+
+    alert("Nomor berhasil disalin!");
+
+  }catch(e){
+
+    alert("Nomor: "+number);
+
+  }
+
+}
+
+
+function showQRIS(){
+
+  document.getElementById("qrisImage")
+    .style.display="block";
+
+}
+
+
+/* =================================
+   SUDAH BAYAR
+   ================================= */
+
+function alreadyPaid(){
+
+  if(!selectedPayment){
+
+    alert("Pilih metode pembayaran terlebih dahulu!");
+
+    return;
+  }
+
+
+  const yakin=confirm(
+    "Kamu sudah transfer "+
+    rupiah(order.total)+
+    " menggunakan "+
+    selectedPayment+
+    "?"
+  );
+
+
+  if(!yakin)return;
+
+
+  order.status="Pembayaran Berhasil";
+
+  order.payment=selectedPayment;
+
+  order.paidAt=
+    new Date().toLocaleString("id-ID");
+
+
+  localStorage.setItem(
+    "vinStoreOrder",
+    JSON.stringify(order)
+  );
+
+
+  /* Buat pesan WhatsApp */
+
+  let message=
+    "HALO VIN STORE 👋\n\n";
+
+  message+=
+    "Saya sudah melakukan pembayaran.\n\n";
+
+  message+=
+    "📦 DETAIL PESANAN\n";
+
+
+  order.items.forEach(item=>{
+
+    message+=
+      "• "+
+      item.name+
+      " × "+
+      item.qty+
+      " = "+
+      rupiah(item.subtotal)+
+      "\n";
+
+  });
+
+
+  message+=
+    "\n💰 TOTAL: "+
+    rupiah(order.total);
+
+  message+=
+    "\n💳 METODE: "+
+    selectedPayment;
+
+  message+=
+    "\n👤 NAMA: "+
+    order.name;
+
+  message+=
+    "\n📱 NO. WA: "+
+    order.phone;
+
+  message+=
+    "\n📝 CATATAN: "+
+    (order.note||"-");
+
+  message+=
+    "\n✅ STATUS: Pembayaran Berhasil";
+
+  message+=
+    "\n\n📸 Saya akan mengirim bukti pembayaran.";
+
+
+  const url=
+    "https://wa.me/"+
+    NOMOR_ADMIN+
+    "?text="+
+    encodeURIComponent(message);
+
+
+  document.getElementById("whatsappButton")
+    .href=url;
+
+
+  /* Hilangkan pembayaran */
+
+  document.getElementById("orderCard")
+    .style.display="none";
+
+  document.getElementById("paymentCard")
+    .style.display="none";
+
+
+  /* Tampilkan berhasil */
+
+  document.getElementById("successCard")
+    .style.display="block";
+
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+}
 
 </script>
 
 </body>
-        </html>
+</html>
