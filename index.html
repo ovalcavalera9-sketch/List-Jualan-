@@ -1,1 +1,1181 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TopUpKu Store</title>
 
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+  background:#f5f6f8;
+  color:#202124;
+}
+
+header{
+  background:#111827;
+  color:white;
+  position:sticky;
+  top:0;
+  z-index:1000;
+  box-shadow:0 2px 10px #0002;
+}
+
+.nav{
+  max-width:1150px;
+  margin:auto;
+  padding:14px 18px;
+  display:flex;
+  align-items:center;
+  gap:20px;
+}
+
+.logo{
+  font-size:23px;
+  font-weight:800;
+  white-space:nowrap;
+}
+
+.logo span{
+  color:#22c55e;
+}
+
+.search{
+  flex:1;
+  position:relative;
+}
+
+.search input{
+  width:100%;
+  padding:12px 16px;
+  border:0;
+  outline:0;
+  border-radius:10px;
+  font-size:14px;
+}
+
+.cartBtn{
+  background:#22c55e;
+  color:white;
+  border:0;
+  padding:11px 15px;
+  border-radius:9px;
+  cursor:pointer;
+  font-weight:bold;
+  white-space:nowrap;
+}
+
+.hero{
+  background:linear-gradient(135deg,#111827,#1f2937);
+  color:white;
+  padding:55px 18px;
+}
+
+.heroContent{
+  max-width:1150px;
+  margin:auto;
+}
+
+.hero h1{
+  font-size:40px;
+  margin-bottom:10px;
+}
+
+.hero p{
+  color:#d1d5db;
+  max-width:600px;
+  line-height:1.6;
+}
+
+.container{
+  max-width:1150px;
+  margin:30px auto;
+  padding:0 18px;
+}
+
+.categories{
+  display:flex;
+  gap:10px;
+  overflow-x:auto;
+  padding-bottom:10px;
+  margin-bottom:25px;
+}
+
+.category{
+  border:1px solid #ddd;
+  background:white;
+  padding:10px 16px;
+  border-radius:20px;
+  cursor:pointer;
+  white-space:nowrap;
+}
+
+.category.active{
+  background:#111827;
+  color:white;
+}
+
+.sectionTitle{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:18px;
+}
+
+.sectionTitle h2{
+  font-size:24px;
+}
+
+.products{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:18px;
+}
+
+.card{
+  background:white;
+  border-radius:14px;
+  overflow:hidden;
+  box-shadow:0 3px 15px #0000000d;
+  transition:.2s;
+}
+
+.card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 8px 25px #00000018;
+}
+
+.productImage{
+  width:100%;
+  height:190px;
+  object-fit:cover;
+  background:#eee;
+}
+
+.cardBody{
+  padding:15px;
+}
+
+.badge{
+  display:inline-block;
+  background:#dcfce7;
+  color:#15803d;
+  font-size:11px;
+  padding:5px 8px;
+  border-radius:5px;
+  margin-bottom:9px;
+}
+
+.card h3{
+  font-size:16px;
+  margin-bottom:8px;
+}
+
+.description{
+  font-size:13px;
+  color:#777;
+  line-height:1.4;
+  min-height:37px;
+}
+
+.price{
+  font-size:18px;
+  font-weight:800;
+  margin:13px 0;
+}
+
+.buyBtn{
+  width:100%;
+  padding:11px;
+  border:0;
+  border-radius:8px;
+  background:#111827;
+  color:white;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.buyBtn:hover{
+  background:#22c55e;
+}
+
+.noResult{
+  text-align:center;
+  padding:50px;
+  grid-column:1/-1;
+  color:#777;
+}
+
+/* MODAL */
+
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:#0008;
+  z-index:2000;
+  padding:20px;
+  overflow:auto;
+}
+
+.modalBox{
+  background:white;
+  max-width:550px;
+  margin:40px auto;
+  border-radius:15px;
+  padding:22px;
+  position:relative;
+}
+
+.close{
+  position:absolute;
+  right:18px;
+  top:12px;
+  font-size:28px;
+  cursor:pointer;
+  color:#555;
+}
+
+.modalTitle{
+  font-size:23px;
+  font-weight:bold;
+  margin-bottom:20px;
+}
+
+.cartItem{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  border-bottom:1px solid #eee;
+  padding:13px 0;
+}
+
+.cartItem img{
+  width:60px;
+  height:60px;
+  object-fit:cover;
+  border-radius:8px;
+}
+
+.cartInfo{
+  flex:1;
+}
+
+.cartInfo h4{
+  margin-bottom:5px;
+}
+
+.cartInfo p{
+  color:#555;
+  font-size:13px;
+}
+
+.remove{
+  border:0;
+  background:#fee2e2;
+  color:#dc2626;
+  padding:7px 9px;
+  border-radius:7px;
+  cursor:pointer;
+}
+
+.total{
+  display:flex;
+  justify-content:space-between;
+  font-size:20px;
+  font-weight:bold;
+  margin:20px 0;
+}
+
+.formGroup{
+  margin-bottom:13px;
+}
+
+.formGroup label{
+  display:block;
+  margin-bottom:6px;
+  font-size:13px;
+  font-weight:bold;
+}
+
+.formGroup input,
+.formGroup textarea,
+.formGroup select{
+  width:100%;
+  padding:12px;
+  border:1px solid #ddd;
+  border-radius:8px;
+  outline:none;
+}
+
+.formGroup textarea{
+  resize:vertical;
+  min-height:80px;
+}
+
+.payment{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+
+.payment label{
+  border:1px solid #ddd;
+  padding:12px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.payment input{
+  margin-right:5px;
+}
+
+.checkoutBtn{
+  width:100%;
+  padding:14px;
+  background:#22c55e;
+  color:white;
+  border:0;
+  border-radius:9px;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+  margin-top:8px;
+}
+
+.empty{
+  text-align:center;
+  padding:30px;
+  color:#777;
+}
+
+footer{
+  margin-top:60px;
+  background:#111827;
+  color:#ddd;
+  padding:35px 18px;
+}
+
+.footerContent{
+  max-width:1150px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  gap:30px;
+}
+
+footer h3{
+  color:white;
+  margin-bottom:10px;
+}
+
+footer p{
+  font-size:13px;
+  line-height:1.7;
+}
+
+@media(max-width:850px){
+  .products{
+    grid-template-columns:repeat(3,1fr);
+  }
+}
+
+@media(max-width:650px){
+  .nav{
+    flex-wrap:wrap;
+  }
+
+  .logo{
+    order:1;
+  }
+
+  .cartBtn{
+    order:2;
+    margin-left:auto;
+  }
+
+  .search{
+    order:3;
+    flex-basis:100%;
+  }
+
+  .hero h1{
+    font-size:30px;
+  }
+
+  .products{
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+  }
+
+  .productImage{
+    height:160px;
+  }
+
+  .cardBody{
+    padding:12px;
+  }
+
+  .footerContent{
+    flex-direction:column;
+  }
+}
+
+@media(max-width:380px){
+  .products{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="nav">
+
+    <div class="logo">
+      TopUp<span>Ku</span>
+    </div>
+
+    <div class="search">
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Cari produk..."
+        oninput="searchProduct()">
+    </div>
+
+    <button class="cartBtn" onclick="openCart()">
+      🛒 Keranjang
+      (<span id="cartCount">0</span>)
+    </button>
+
+  </div>
+</header>
+
+
+<section class="hero">
+  <div class="heroContent">
+    <h1>Belanja Mudah & Cepat 🚀</h1>
+    <p>
+      Selamat datang di toko kami. Pilih produk yang kamu inginkan,
+      masukkan ke keranjang, lalu checkout dengan mudah.
+    </p>
+  </div>
+</section>
+
+
+<main class="container">
+
+  <div class="categories">
+
+    <button class="category active"
+      onclick="filterCategory('Semua',this)">
+      Semua
+    </button>
+
+    <button class="category"
+      onclick="filterCategory('Game',this)">
+      🎮 Game
+    </button>
+
+    <button class="category"
+      onclick="filterCategory('Digital',this)">
+      💻 Digital
+    </button>
+
+    <button class="category"
+      onclick="filterCategory('Aksesoris',this)">
+      📱 Aksesoris
+    </button>
+
+  </div>
+
+
+  <div class="sectionTitle">
+    <h2>Produk Terbaru</h2>
+  </div>
+
+
+  <div class="products" id="productList"></div>
+
+</main>
+
+
+<!-- KERANJANG -->
+
+<div class="modal" id="cartModal">
+
+  <div class="modalBox">
+
+    <span class="close" onclick="closeCart()">×</span>
+
+    <div class="modalTitle">
+      🛒 Keranjang Belanja
+    </div>
+
+    <div id="cartItems"></div>
+
+    <div class="total">
+      <span>Total</span>
+      <span id="cartTotal">Rp0</span>
+    </div>
+
+    <button class="checkoutBtn" onclick="openCheckout()">
+      Lanjut Checkout
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- CHECKOUT -->
+
+<div class="modal" id="checkoutModal">
+
+  <div class="modalBox">
+
+    <span class="close" onclick="closeCheckout()">×</span>
+
+    <div class="modalTitle">
+      📦 Checkout
+    </div>
+
+    <div class="formGroup">
+      <label>Nama</label>
+      <input
+        type="text"
+        id="buyerName"
+        placeholder="Masukkan nama">
+    </div>
+
+    <div class="formGroup">
+      <label>Nomor WhatsApp</label>
+      <input
+        type="text"
+        id="buyerPhone"
+        placeholder="08xxxxxxxxxx">
+    </div>
+
+    <div class="formGroup">
+      <label>Alamat / Catatan</label>
+      <textarea
+        id="buyerAddress"
+        placeholder="Tulis alamat atau catatan pesanan"></textarea>
+    </div>
+
+    <div class="formGroup">
+
+      <label>Metode Pembayaran</label>
+
+      <div class="payment">
+
+        <label>
+          <input type="radio"
+            name="payment"
+            value="DANA"
+            checked>
+          DANA
+        </label>
+
+        <label>
+          <input type="radio"
+            name="payment"
+            value="GoPay">
+          GoPay
+        </label>
+
+        <label>
+          <input type="radio"
+            name="payment"
+            value="OVO">
+          OVO
+        </label>
+
+        <label>
+          <input type="radio"
+            name="payment"
+            value="QRIS">
+          QRIS
+        </label>
+
+      </div>
+
+    </div>
+
+    <div class="total">
+      <span>Total</span>
+      <span id="checkoutTotal">Rp0</span>
+    </div>
+
+    <button class="checkoutBtn" onclick="checkout()">
+      Pesan Sekarang via WhatsApp
+    </button>
+
+  </div>
+
+</div>
+
+
+<footer>
+
+  <div class="footerContent">
+
+    <div>
+      <h3>TopUpKu</h3>
+      <p>
+        Toko online sederhana dengan proses
+        pemesanan cepat dan mudah.
+      </p>
+    </div>
+
+    <div>
+      <h3>Kontak</h3>
+      <p>
+        WhatsApp: 08xxxxxxxxxx<br>
+        Instagram: @tokokamu
+      </p>
+    </div>
+
+    <div>
+      <h3>Jam Operasional</h3>
+      <p>
+        Senin - Minggu<br>
+        08:00 - 22:00
+      </p>
+    </div>
+
+  </div>
+
+</footer>
+
+
+<script>
+
+/* =========================
+   DATA PRODUK
+========================= */
+
+const products = [
+
+  {
+    id:1,
+    name:"Mobile Legends 86 Diamond",
+    price:27000,
+    category:"Game",
+    image:"https://picsum.photos/600/600?random=11",
+    description:"Top up 86 Diamond Mobile Legends."
+  },
+
+  {
+    id:2,
+    name:"Mobile Legends 172 Diamond",
+    price:52000,
+    category:"Game",
+    image:"https://picsum.photos/600/600?random=12",
+    description:"Top up 172 Diamond Mobile Legends."
+  },
+
+  {
+    id:3,
+    name:"Roblox 400 Robux",
+    price:65000,
+    category:"Game",
+    image:"https://picsum.photos/600/600?random=13",
+    description:"Top up Robux Roblox."
+  },
+
+  {
+    id:4,
+    name:"Pulsa 10.000",
+    price:12000,
+    category:"Digital",
+    image:"https://picsum.photos/600/600?random=14",
+    description:"Pulsa semua operator."
+  },
+
+  {
+    id:5,
+    name:"Pulsa 25.000",
+    price:27000,
+    category:"Digital",
+    image:"https://picsum.photos/600/600?random=15",
+    description:"Pulsa semua operator."
+  },
+
+  {
+    id:6,
+    name:"Voucher Digital",
+    price:20000,
+    category:"Digital",
+    image:"https://picsum.photos/600/600?random=16",
+    description:"Voucher digital murah."
+  },
+
+  {
+    id:7,
+    name:"Kabel Data",
+    price:15000,
+    category:"Aksesoris",
+    image:"https://picsum.photos/600/600?random=17",
+    description:"Kabel data untuk HP."
+  },
+
+  {
+    id:8,
+    name:"Headset Gaming",
+    price:75000,
+    category:"Aksesoris",
+    image:"https://picsum.photos/600/600?random=18",
+    description:"Headset gaming dengan microphone."
+  }
+
+];
+
+
+let cart = [];
+
+let currentCategory = "Semua";
+
+
+/* =========================
+   TAMPILKAN PRODUK
+========================= */
+
+function displayProducts(list){
+
+  const container =
+    document.getElementById("productList");
+
+  container.innerHTML = "";
+
+  if(list.length === 0){
+
+    container.innerHTML =
+      `<div class="noResult">
+        Produk tidak ditemukan 😔
+      </div>`;
+
+    return;
+  }
+
+
+  list.forEach(product => {
+
+    container.innerHTML += `
+
+      <div class="card">
+
+        <img
+          class="productImage"
+          src="${product.image}"
+          alt="${product.name}">
+
+        <div class="cardBody">
+
+          <span class="badge">
+            ${product.category}
+          </span>
+
+          <h3>
+            ${product.name}
+          </h3>
+
+          <p class="description">
+            ${product.description}
+          </p>
+
+          <div class="price">
+            Rp${product.price.toLocaleString("id-ID")}
+          </div>
+
+          <button
+            class="buyBtn"
+            onclick="addToCart(${product.id})">
+
+            + Keranjang
+
+          </button>
+
+        </div>
+
+      </div>
+
+    `;
+
+  });
+
+}
+
+
+displayProducts(products);
+
+
+/* =========================
+   SEARCH
+========================= */
+
+function searchProduct(){
+
+  const keyword =
+    document
+      .getElementById("searchInput")
+      .value
+      .toLowerCase();
+
+
+  const result =
+    products.filter(product => {
+
+      const matchName =
+        product.name
+          .toLowerCase()
+          .includes(keyword);
+
+      const matchCategory =
+        product.category
+          .toLowerCase()
+          .includes(keyword);
+
+
+      const matchCurrentCategory =
+        currentCategory === "Semua" ||
+        product.category === currentCategory;
+
+
+      return (
+        (matchName || matchCategory) &&
+        matchCurrentCategory
+      );
+
+    });
+
+
+  displayProducts(result);
+
+}
+
+
+/* =========================
+   FILTER KATEGORI
+========================= */
+
+function filterCategory(category,button){
+
+  currentCategory = category;
+
+  document
+    .querySelectorAll(".category")
+    .forEach(btn =>
+      btn.classList.remove("active")
+    );
+
+
+  button.classList.add("active");
+
+  searchProduct();
+
+}
+
+
+/* =========================
+   KERANJANG
+========================= */
+
+function addToCart(id){
+
+  const product =
+    products.find(p => p.id === id);
+
+
+  const existing =
+    cart.find(item => item.id === id);
+
+
+  if(existing){
+
+    existing.qty++;
+
+  }else{
+
+    cart.push({
+      ...product,
+      qty:1
+    });
+
+  }
+
+
+  updateCart();
+
+  alert(product.name + " ditambahkan ke keranjang!");
+
+}
+
+
+function updateCart(){
+
+  const count =
+    cart.reduce(
+      (total,item) =>
+      total + item.qty,
+      0
+    );
+
+
+  document.getElementById("cartCount")
+    .innerText = count;
+
+
+  const container =
+    document.getElementById("cartItems");
+
+
+  container.innerHTML = "";
+
+
+  if(cart.length === 0){
+
+    container.innerHTML =
+      `<div class="empty">
+        Keranjang masih kosong 🛒
+      </div>`;
+
+  }
+
+
+  let total = 0;
+
+
+  cart.forEach((item,index) => {
+
+    total += item.price * item.qty;
+
+
+    container.innerHTML += `
+
+      <div class="cartItem">
+
+        <img src="${item.image}">
+
+        <div class="cartInfo">
+
+          <h4>${item.name}</h4>
+
+          <p>
+            ${item.qty} ×
+            Rp${item.price.toLocaleString("id-ID")}
+          </p>
+
+        </div>
+
+        <button
+          class="remove"
+          onclick="removeItem(${index})">
+
+          Hapus
+
+        </button>
+
+      </div>
+
+    `;
+
+  });
+
+
+  document.getElementById("cartTotal")
+    .innerText =
+      "Rp" + total.toLocaleString("id-ID");
+
+
+  document.getElementById("checkoutTotal")
+    .innerText =
+      "Rp" + total.toLocaleString("id-ID");
+
+}
+
+
+function removeItem(index){
+
+  cart.splice(index,1);
+
+  updateCart();
+
+}
+
+
+function openCart(){
+
+  document.getElementById("cartModal")
+    .style.display = "block";
+
+  updateCart();
+
+}
+
+
+function closeCart(){
+
+  document.getElementById("cartModal")
+    .style.display = "none";
+
+}
+
+
+/* =========================
+   CHECKOUT
+========================= */
+
+function openCheckout(){
+
+  if(cart.length === 0){
+
+    alert("Keranjang masih kosong!");
+
+    return;
+
+  }
+
+
+  closeCart();
+
+  document.getElementById("checkoutModal")
+    .style.display = "block";
+
+  updateCart();
+
+}
+
+
+function closeCheckout(){
+
+  document.getElementById("checkoutModal")
+    .style.display = "none";
+
+}
+
+
+/* =========================
+   PESAN WHATSAPP
+========================= */
+
+function checkout(){
+
+  if(cart.length === 0){
+
+    alert("Keranjang masih kosong!");
+
+    return;
+
+  }
+
+
+  const name =
+    document.getElementById("buyerName").value.trim();
+
+  const phone =
+    document.getElementById("buyerPhone").value.trim();
+
+  const address =
+    document.getElementById("buyerAddress").value.trim();
+
+
+  if(!name || !phone){
+
+    alert("Nama dan nomor WhatsApp wajib diisi!");
+
+    return;
+
+  }
+
+
+  const payment =
+    document.querySelector(
+      'input[name="payment"]:checked'
+    ).value;
+
+
+  let total = 0;
+
+  let message =
+    "HALO TOKOKU 👋%0A%0A" +
+    "Saya ingin melakukan pemesanan:%0A%0A";
+
+
+  cart.forEach(item => {
+
+    const subtotal =
+      item.price * item.qty;
+
+    total += subtotal;
+
+
+    message +=
+      "• " + item.name +
+      "%0A" +
+      "  Jumlah: " + item.qty +
+      "%0A" +
+      "  Harga: Rp" +
+      item.price.toLocaleString("id-ID") +
+      "%0A%0A";
+
+  });
+
+
+  message +=
+    "TOTAL: Rp" +
+    total.toLocaleString("id-ID") +
+    "%0A" +
+    "Pembayaran: " +
+    payment +
+    "%0A" +
+    "Nama: " +
+    name +
+    "%0A" +
+    "No. WhatsApp: " +
+    phone +
+    "%0A" +
+    "Catatan: " +
+    (address || "-");
+
+
+  /*
+    ============================
+    GANTI NOMOR TOKO DI SINI
+    ============================
+
+    Contoh:
+    081234567890
+
+    ditulis:
+    6281234567890
+  */
+
+  const nomorToko =
+    "6281234567890";
+
+
+  const url =
+    "https://wa.me/" +
+    nomorToko +
+    "?text=" +
+    message;
+
+
+  window.open(url,"_blank");
+
+}
+
+</script>
+
+</body>
+  </html>
