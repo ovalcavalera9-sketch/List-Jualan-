@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Pembayaran - Vin Store</title>
 
 <style>
@@ -121,6 +120,8 @@ header{
   transform:scale(.96);
 }
 
+/* QRIS */
+
 .qris{
   text-align:center;
 }
@@ -141,20 +142,33 @@ header{
   line-height:1.5;
 }
 
+/* TOMBOL MINTA QR */
+
 .admin-number{
-  display:inline-block;
-  margin-top:8px;
+  display:block;
+  margin-top:12px;
+  padding:13px;
+  border:1px solid #00eaff;
+  border-radius:9px;
   color:#00eaff;
-  font-size:17px;
+  font-size:16px;
   font-weight:bold;
   text-decoration:none;
-  cursor:pointer;
-  text-shadow:0 0 8px rgba(0,234,255,.4);
+  background:rgba(0,234,255,.06);
+  box-shadow:0 0 12px rgba(0,234,255,.12);
+  transition:.2s;
 }
 
 .admin-number:hover{
-  color:#c4b5fd;
-  text-decoration:underline;
+  color:white;
+  border-color:#c4b5fd;
+  box-shadow:
+    0 0 15px rgba(0,234,255,.25),
+    0 0 15px rgba(124,58,237,.2);
+}
+
+.admin-number:active{
+  transform:scale(.98);
 }
 
 .pay-button{
@@ -174,6 +188,8 @@ header{
 .pay-button:active{
   transform:scale(.98);
 }
+
+/* STATUS */
 
 .success{
   display:none;
@@ -222,12 +238,6 @@ header{
   text-decoration:none;
 }
 
-.empty{
-  text-align:center;
-  padding:40px 15px;
-  color:#aaa;
-}
-
 .note{
   margin-top:12px;
   padding:12px;
@@ -237,13 +247,16 @@ header{
   line-height:1.5;
 }
 
+.empty{
+  text-align:center;
+  padding:30px 10px;
+  color:#aaa;
+}
+
 @media(max-width:500px){
+
   .container{
     width:94%;
-  }
-
-  .pay-number{
-    align-items:flex-start;
   }
 
   .number{
@@ -253,6 +266,7 @@ header{
   .copy-btn{
     padding:7px 10px;
   }
+
 }
 </style>
 </head>
@@ -265,7 +279,10 @@ header{
 
 <div class="container">
 
-  <!-- DETAIL PESANAN -->
+  <!-- =========================
+       DETAIL PESANAN
+  ========================== -->
+
   <div class="card" id="orderCard">
 
     <h2>📦 Detail Pesanan</h2>
@@ -297,26 +314,36 @@ header{
     </div>
 
     <div class="note" id="noteBox" style="display:none;">
+
       <b>Catatan:</b><br>
+
       <span id="customerNote"></span>
+
     </div>
 
   </div>
 
 
-  <!-- PEMBAYARAN -->
+  <!-- =========================
+       PEMBAYARAN
+  ========================== -->
+
   <div class="card" id="paymentCard">
 
-    <h2>💰 Cara Pembayaran</h2>
+    <h2>💰 Pembayaran</h2>
+
 
     <!-- DANA -->
+
     <div class="payment-box">
 
       <h3>🔵 DANA</h3>
 
       <div class="pay-number">
 
-        <span class="number" id="danaNumber">
+        <span
+          class="number"
+          id="danaNumber">
           08XXXXXXXXXX
         </span>
 
@@ -332,13 +359,16 @@ header{
 
 
     <!-- GOPAY -->
+
     <div class="payment-box">
 
-      <h3>🔵 GoPay</h3>
+      <h3>🟢 GoPay</h3>
 
       <div class="pay-number">
 
-        <span class="number" id="gopayNumber">
+        <span
+          class="number"
+          id="gopayNumber">
           08XXXXXXXXXX
         </span>
 
@@ -354,13 +384,16 @@ header{
 
 
     <!-- OVO -->
+
     <div class="payment-box">
 
       <h3>🟣 OVO</h3>
 
       <div class="pay-number">
 
-        <span class="number" id="ovoNumber">
+        <span
+          class="number"
+          id="ovoNumber">
           08XXXXXXXXXX
         </span>
 
@@ -375,66 +408,94 @@ header{
     </div>
 
 
-    <!-- QRIS -->
+    <!-- =========================
+         QRIS
+    ========================== -->
+
     <div class="payment-box qris">
 
       <h3>📱 QRIS</h3>
 
       <p class="admin-text">
         Untuk mendapatkan QR pembayaran,
-        silakan minta QR ke Admin:
+        silakan hubungi Admin:
       </p>
+
+
+      <!-- KLIK UNTUK WHATSAPP ADMIN -->
 
       <a
         class="admin-number"
-        href="https://wa.me/6285718504288"
+        id="adminLink"
+        href="#"
         target="_blank"
         rel="noopener">
-        6285718504288
+
+        👉 Klik di sini untuk minta QR ke Admin
+
       </a>
+
+
+      <!-- FOTO QRIS -->
 
       <img
         src="qris.png"
-        alt="QRIS Vin Store"
-        onerror="this.style.display='none';">
+        alt="QRIS Vin Store">
+
 
       <p class="admin-text">
-        Jika QRIS belum muncul, pastikan file
-        <b>qris.png</b> berada di folder yang sama
-        dengan file <b>payment.html</b>.
+        Jika QRIS belum tersedia,
+        klik tombol di atas untuk meminta QR
+        kepada Admin.
       </p>
 
     </div>
 
 
-    <!-- TOMBOL SUDAH BAYAR -->
+    <!-- =========================
+         SUDAH BAYAR
+    ========================== -->
+
     <button
       class="pay-button"
       onclick="sudahBayar()">
+
       ✅ SAYA SUDAH BAYAR
+
     </button>
 
   </div>
 
 
-  <!-- STATUS -->
-  <div class="card success" id="successCard">
+  <!-- =========================
+       STATUS MENUNGGU
+  ========================== -->
+
+  <div
+    class="card success"
+    id="successCard">
 
     <div class="success-icon">
       ⏳
     </div>
 
-    <h2>Sedang Menunggu Pembayaran</h2>
+    <h2>
+      Sedang Menunggu Pembayaran
+    </h2>
 
     <p>
       Pesanan kamu sudah ditandai sebagai
-      <b>menunggu konfirmasi admin</b>.
+      <b>Menunggu Konfirmasi Admin</b>.
     </p>
 
     <p>
-      Silakan kirim bukti pembayaran kepada Admin
-      melalui WhatsApp.
+      Klik tombol di bawah untuk otomatis
+      membuka WhatsApp Admin dengan
+      detail pesanan kamu.
     </p>
+
+
+    <!-- WHATSAPP OTOMATIS -->
 
     <a
       class="wa-button"
@@ -442,13 +503,18 @@ header{
       href="#"
       target="_blank"
       rel="noopener">
-      💬 KIRIM KE ADMIN
+
+      💬 KIRIM DETAIL KE ADMIN
+
     </a>
+
 
     <a
       class="back-button"
       href="index.html">
+
       ← Kembali ke Toko
+
     </a>
 
   </div>
@@ -458,42 +524,54 @@ header{
 
 <script>
 
-/* =========================
+/* =================================
    NOMOR PEMBAYARAN
-========================= */
+================================= */
 
-const NOMOR_DANA = "0895396001313";
-const NOMOR_GOPAY = "085718504288";
-const NOMOR_OVO = "blm ada guys";
+const NOMOR_DANA = "08XXXXXXXXXX";
+
+const NOMOR_GOPAY = "08XXXXXXXXXX";
+
+const NOMOR_OVO = "08XXXXXXXXXX";
+
+
+/* =================================
+   NOMOR ADMIN WHATSAPP
+================================= */
 
 const NOMOR_ADMIN = "6285718504288";
 
 
-/* =========================
-   AMBIL ORDER
-========================= */
+/* =================================
+   AMBIL DATA PESANAN
+================================= */
 
 let order = null;
 
 try{
 
-  const savedOrder =
+  const saved =
     localStorage.getItem("vinStoreOrder");
 
-  if(savedOrder){
-    order = JSON.parse(savedOrder);
+  if(saved){
+
+    order = JSON.parse(saved);
+
   }
 
 }catch(error){
 
-  console.log("Gagal membaca order:",error);
+  console.log(
+    "Gagal membaca pesanan:",
+    error
+  );
 
 }
 
 
-/* =========================
+/* =================================
    FORMAT RUPIAH
-========================= */
+================================= */
 
 function rupiah(number){
 
@@ -504,25 +582,9 @@ function rupiah(number){
 }
 
 
-/* =========================
-   ESCAPE HTML
-========================= */
-
-function escapeHTML(text){
-
-  return String(text ?? "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-
-}
-
-
-/* =========================
-   TAMPILKAN NOMOR
-========================= */
+/* =================================
+   TAMPILKAN NOMOR PEMBAYARAN
+================================= */
 
 document.getElementById("danaNumber").textContent =
   NOMOR_DANA;
@@ -534,9 +596,24 @@ document.getElementById("ovoNumber").textContent =
   NOMOR_OVO;
 
 
-/* =========================
-   SALIN NOMOR
-========================= */
+/* =================================
+   LINK ADMIN UNTUK MINTA QR
+================================= */
+
+const pesanMintaQR =
+  "Halo Admin Vin Store 👋\n\n" +
+  "Saya ingin meminta QR untuk pembayaran.";
+
+document.getElementById("adminLink").href =
+  "https://wa.me/" +
+  NOMOR_ADMIN +
+  "?text=" +
+  encodeURIComponent(pesanMintaQR);
+
+
+/* =================================
+   COPY NOMOR
+================================= */
 
 function copyNumber(id){
 
@@ -545,6 +622,7 @@ function copyNumber(id){
 
   const text =
     element.textContent.trim();
+
 
   if(
     navigator.clipboard &&
@@ -555,7 +633,9 @@ function copyNumber(id){
       .writeText(text)
       .then(function(){
 
-        alert("Nomor berhasil disalin! 📋");
+        alert(
+          "Nomor berhasil disalin! 📋"
+        );
 
       })
       .catch(function(){
@@ -573,9 +653,9 @@ function copyNumber(id){
 }
 
 
-/* =========================
+/* =================================
    FALLBACK COPY
-========================= */
+================================= */
 
 function fallbackCopy(text){
 
@@ -587,18 +667,25 @@ function fallbackCopy(text){
   document.body.appendChild(input);
 
   input.select();
-  input.setSelectionRange(0,99999);
+
+  input.setSelectionRange(
+    0,
+    99999
+  );
 
   try{
 
     document.execCommand("copy");
 
-    alert("Nomor berhasil disalin! 📋");
+    alert(
+      "Nomor berhasil disalin! 📋"
+    );
 
   }catch(error){
 
     alert(
-      "Gagal menyalin. Silakan salin nomor secara manual."
+      "Gagal menyalin. " +
+      "Silakan salin nomor secara manual."
     );
 
   }
@@ -608,27 +695,37 @@ function fallbackCopy(text){
 }
 
 
-/* =========================
+/* =================================
    TAMPILKAN PESANAN
-========================= */
+================================= */
 
 function showOrder(){
 
   if(!order){
 
     document.getElementById("orderCard").innerHTML = `
+
       <div class="empty">
-        <h2>❌ Pesanan tidak ditemukan</h2>
+
+        <h2>
+          ❌ Pesanan tidak ditemukan
+        </h2>
+
         <p style="margin-top:10px;">
-          Silakan kembali ke toko dan buat pesanan terlebih dahulu.
+          Silakan kembali ke toko
+          dan buat pesanan terlebih dahulu.
         </p>
 
         <a
           class="back-button"
           href="index.html">
+
           ← Kembali ke Toko
+
         </a>
+
       </div>
+
     `;
 
     document.getElementById("paymentCard").style.display =
@@ -638,6 +735,8 @@ function showOrder(){
 
   }
 
+
+  /* DATA PEMBELI */
 
   document.getElementById("customerName").textContent =
     order.name || "-";
@@ -661,30 +760,40 @@ function showOrder(){
 
     order.items.forEach(function(item){
 
-      const div =
-        document.createElement("div");
+      itemsBox.innerHTML += `
 
-      div.className = "item";
+        <div class="item">
 
-      div.innerHTML = `
-        <b>${escapeHTML(item.name)}</b><br>
-        <span style="color:#aaa;">
-          ${Number(item.qty || 0)}
-          ×
-          ${rupiah(item.price)}
-        </span>
-        <br>
-        <span style="color:#00eaff;">
-          ${rupiah(item.subtotal)}
-        </span>
+          <b>${escapeHTML(item.name)}</b>
+
+          <br>
+
+          <span style="color:#aaa;">
+
+            ${Number(item.qty || 0)}
+            ×
+            ${rupiah(item.price)}
+
+          </span>
+
+          <br>
+
+          <span style="color:#00eaff;">
+
+            ${rupiah(item.subtotal)}
+
+          </span>
+
+        </div>
+
       `;
-
-      itemsBox.appendChild(div);
 
     });
 
   }
 
+
+  /* TOTAL */
 
   document.getElementById("totalPrice").textContent =
     rupiah(order.total);
@@ -703,7 +812,7 @@ function showOrder(){
   }
 
 
-  /* STATUS SEBELUMNYA */
+  /* CEK STATUS */
 
   if(
     order.status ===
@@ -717,15 +826,33 @@ function showOrder(){
 }
 
 
-/* =========================
-   SUDAH BAYAR
-========================= */
+/* =================================
+   AMANKAN TEKS
+================================= */
+
+function escapeHTML(text){
+
+  return String(text ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+/* =================================
+   SAYA SUDAH BAYAR
+================================= */
 
 function sudahBayar(){
 
   if(!order){
 
-    alert("Pesanan tidak ditemukan!");
+    alert(
+      "Pesanan tidak ditemukan!"
+    );
 
     return;
 
@@ -744,6 +871,8 @@ function sudahBayar(){
     new Date().toLocaleString("id-ID");
 
 
+  /* SIMPAN STATUS */
+
   localStorage.setItem(
     "vinStoreOrder",
     JSON.stringify(order)
@@ -755,79 +884,120 @@ function sudahBayar(){
 }
 
 
-/* =========================
-   TAMPILKAN STATUS MENUNGGU
-========================= */
+/* =================================
+   STATUS MENUNGGU
+================================= */
 
 function showWaiting(){
 
   document.getElementById("paymentCard").style.display =
     "none";
 
-  const successCard =
-    document.getElementById("successCard");
 
-  successCard.style.display =
+  document.getElementById("successCard").style.display =
     "block";
 
 
   /* PESAN WHATSAPP */
 
-  let message =
-    "Halo Admin Vin Store,%0A%0A" +
-    "Saya sudah melakukan pembayaran.%0A%0A";
+  let pesan =
+    "Halo Admin Vin Store! 👋\n\n" +
+    "Saya sudah melakukan pembayaran.\n\n";
 
 
-  if(order){
+  pesan +=
+    "📦 DETAIL PESANAN\n";
 
-    message +=
-      "Nama: " +
-      encodeURIComponent(order.name || "-") +
-      "%0A";
 
-    message +=
-      "WhatsApp: " +
-      encodeURIComponent(order.phone || "-") +
-      "%0A";
+  pesan +=
+    "Nama: " +
+    (order.name || "-") +
+    "\n";
 
-    message +=
-      "Metode: " +
-      encodeURIComponent(order.payment || "-") +
-      "%0A";
 
-    message +=
-      "Total: " +
-      encodeURIComponent(
-        rupiah(order.total)
-      ) +
-      "%0A";
+  pesan +=
+    "WhatsApp: " +
+    (order.phone || "-") +
+    "\n";
 
-    message +=
-      "%0ASaya akan mengirim bukti pembayaran.";
+
+  pesan +=
+    "Metode Pembayaran: " +
+    (order.payment || "-") +
+    "\n";
+
+
+  pesan +=
+    "Total: " +
+    rupiah(order.total) +
+    "\n";
+
+
+  /* PRODUK */
+
+  if(
+    Array.isArray(order.items) &&
+    order.items.length > 0
+  ){
+
+    pesan +=
+      "\n🛒 PRODUK:\n";
+
+
+    order.items.forEach(function(item){
+
+      pesan +=
+        "- " +
+        item.name +
+        " x" +
+        item.qty +
+        " = " +
+        rupiah(item.subtotal) +
+        "\n";
+
+    });
 
   }
 
 
-  const waURL =
+  /* CATATAN */
+
+  if(order.note){
+
+    pesan +=
+      "\n📝 Catatan: " +
+      order.note +
+      "\n";
+
+  }
+
+
+  pesan +=
+    "\n⏳ Status: Menunggu Konfirmasi Admin.";
+
+
+  /* LINK WHATSAPP */
+
+  const whatsapp =
     "https://wa.me/" +
     NOMOR_ADMIN +
     "?text=" +
-    message;
+    encodeURIComponent(pesan);
 
 
   document.getElementById("waButton").href =
-    waURL;
+    whatsapp;
 
 }
 
 
-/* =========================
-   JALANKAN
-========================= */
+/* =================================
+   MULAI
+================================= */
 
 showOrder();
 
 </script>
 
 </body>
-  </html>
+</html>
